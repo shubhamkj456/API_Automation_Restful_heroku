@@ -11,7 +11,7 @@ public class Getbooking {
 	public void test_2() {
 		
 		baseURI = "https://restful-booker.herokuapp.com";
-		given().get("/booking/3138").then().statusCode(200).log().all();
+		given().get("/booking/1829").then().statusCode(200).log().all();
 				
 	  
 		

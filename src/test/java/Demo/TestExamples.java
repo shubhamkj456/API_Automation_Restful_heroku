@@ -1,4 +1,4 @@
-package Tests;
+package Demo;
 
 
 import org.testng.Assert;

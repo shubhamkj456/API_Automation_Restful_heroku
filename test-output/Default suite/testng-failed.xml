@@ -3,11 +3,12 @@
 <suite name="Failed suite [Default suite]" guice-stage="DEVELOPMENT">
   <test thread-count="5" name="Default test(failed)">
     <classes>
-      <class name="Tests.CreateBookingAndVerify">
+      <class name="Tests.DeleteBookingAndVerify">
         <methods>
-          <include name="testCreateBookingAndVerify"/>
+          <include name="testDeleteBookingAndVerify"/>
+          <include name="setupAuthentication"/>
         </methods>
-      </class> <!-- Tests.CreateBookingAndVerify -->
+      </class> <!-- Tests.DeleteBookingAndVerify -->
     </classes>
   </test> <!-- Default test(failed) -->
 </suite> <!-- Failed suite [Default suite] -->

@@ -11,7 +11,7 @@ import org.json.simple.JSONObject;
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 
-public class UpdateBookingAndVerify {
+public class PartialUpdateBookingAndVerify {
     
     @BeforeClass
     public void setupAuthentication() {
@@ -19,51 +19,42 @@ public class UpdateBookingAndVerify {
     }
 
     @Test
-    public void testUpdateBookingAndVerify() {
+    public void PartialUpdateBookingAndVerify() {
         baseURI = "https://restful-booker.herokuapp.com";
 
-        //Update booking
-        JSONObject updateRequest = new JSONObject();
-        updateRequest.put("firstname", "John");
-        updateRequest.put("lastname", "Wick");
-        updateRequest.put("totalprice", 555);
-        updateRequest.put("depositpaid", false);
-
+        //Update booking partially
+        JSONObject partialUpdateRequest = new JSONObject();
+        
+        // update the booking dates
         JSONObject updatedBookingDates = new JSONObject();
         updatedBookingDates.put("checkin", "2023-10-10");
         updatedBookingDates.put("checkout", "2023-10-15");
 
-        updateRequest.put("bookingdates", updatedBookingDates);
-        updateRequest.put("additionalneeds", "Lunch");
+        partialUpdateRequest.put("bookingdates", updatedBookingDates);
 
-        //Send the PUT request
+        //Send the PATCH request 
         given()
             .contentType(ContentType.JSON)
             .accept(ContentType.JSON)
             .header("Authorization", "Basic YWRtaW46cGFzc3dvcmQxMjM=")
             .header("Accept", "application/json")
-            .body(updateRequest.toJSONString())
+            .body(partialUpdateRequest.toJSONString())
         .when()
-            .put("/booking/3650")
+            .patch("/booking/3106") 
         .then()
             .statusCode(200)
             .log().all();
 
         //Verify the updates by getting the booking details
         Response verifyResponse = given()
-            .header("Accept", "application/json") 
+            .header("Accept", "application/json")
         .when()
-            .get("/booking/3650");
+            .get("/booking/3106");
 
         verifyResponse.then()
             .statusCode(200)
-            .body("firstname", equalTo("John"))
-            .body("lastname", equalTo("Wick"))
-            .body("totalprice", equalTo(555))
-            .body("depositpaid", equalTo(false))
             .body("bookingdates.checkin", equalTo("2023-10-10"))
             .body("bookingdates.checkout", equalTo("2023-10-15"))
-            .body("additionalneeds", equalTo("Lunch"))
             .log().all();
     }
 }

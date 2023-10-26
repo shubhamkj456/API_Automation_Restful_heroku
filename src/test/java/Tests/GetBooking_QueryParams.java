@@ -11,8 +11,8 @@ public class GetBooking_QueryParams {
 	public void test_2() {
 		
 		baseURI = "https://restful-booker.herokuapp.com";
-		//given().get("/booking?firstname=Arthur&lastname=Morgan").then().statusCode(200).log().all();
-		given().get("/booking?checkin=2018-01-01&checkout=2019-01-01").then().statusCode(200).log().all();		
+		given().get("/booking?firstname=Arthur&lastname=Morgan").then().statusCode(200).log().all();
+		given().get("/booking?checkin=2021-01-12&checkout=2021-01-16").then().statusCode(200).log().all();		
 	  
 		
 	}

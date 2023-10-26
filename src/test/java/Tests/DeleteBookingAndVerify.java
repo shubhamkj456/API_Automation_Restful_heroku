@@ -1,79 +1,39 @@
 package Tests;
 
-import org.testng.annotations.Test;
-import org.json.simple.JSONObject;
-import org.junit.BeforeClass;
-import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import io.restassured.response.ResponseOptions;
-import io.restassured.specification.RequestSpecification;
-
 import static io.restassured.RestAssured.*;
-import static org.hamcrest.Matchers.*;
 
-public class DeleteBookingAndVerify {
-	
-	
-	
-	@Test
-	public void BasicAuth() {
-		RequestSpecification requestSpec = RestAssured.given();
-		requestSpec.baseUri("https://restful-booker.herokuapp.com");
-		requestSpec.basePath("/booking/4753");
-		
-		Response response = requestSpec.auth().basic("admin", "password123").get();
-		
-		System.out.println("Response status:" + response.statusLine());
-		}
-	
-	 
-	 @Test
-	    public void testUpdateBookingAndVerify(){
-		 
-		 	baseURI = "https://restful-booker.herokuapp.com";
-		 
-	 JSONObject updateRequest = new JSONObject();
-     updateRequest.put("firstname", "John");
-     updateRequest.put("lastname", "Wick");
-     updateRequest.put("totalprice", 555);
-     updateRequest.put("depositpaid", false);
-     JSONObject updatedBookingDates = new JSONObject();
-     updatedBookingDates.put("checkin", "2023-10-10");
-     updatedBookingDates.put("checkout", "2023-10-15");
-     updateRequest.put("bookingdates", updatedBookingDates);
-     updateRequest.put("additionalneeds", "Dinner");
+    public class DeleteBookingAndVerify {
 
-     Response updateResponse = given()
-             .contentType(ContentType.JSON)
-             .body(updateRequest.toJSONString())
-             .when()
-             .delete("/booking/4753");
+       @BeforeClass
+       public void setupAuthentication() {
+        RestAssured.authentication = basic("admin", "password123");
+    }
 
-     updateResponse.then()
-             .statusCode(200)
-             .log().all();
+    @Test
+    public void testDeleteBookingAndVerify() {
+        baseURI = "https://restful-booker.herokuapp.com";
 
-     // Step 4: Verify the updates by getting the booking details
-     Response verifyResponse = given()
-             .when()
-             .get("/booking/4753");
+        int bookingIdToDelete = 3132; 
 
-     verifyResponse.then()
-             .statusCode(200)
-             .body("firstname", equalTo("John"))
-             .body("lastname", equalTo("Wick"))
-             .body("totalprice", equalTo(555))
-             .body("depositpaid", equalTo(false))
-             .body("bookingdates.checkin", equalTo("2023-10-10"))
-             .body("bookingdates.checkout", equalTo("2023-10-15"))
-             .body("additionalneeds", equalTo("Dinner"))
-             .log().all();
- }
+        // Send the DELETE request 
+        given()
+            .header("Authorization", "Basic YWRtaW46cGFzc3dvcmQxMjM=")
+            .header("Accept", "application/json")
+        .when()
+            .delete("/booking/" + bookingIdToDelete)
+        .then()
+            .statusCode(201); 
+
+        // Verify that the booking has been deleted by trying to get it again
+        given()
+        .header("Accept", "application/json")
+            .when()
+            .get("/booking/" + bookingIdToDelete)
+        .then()
+            .statusCode(404); 
+    }
 }
-	
-	
-
-

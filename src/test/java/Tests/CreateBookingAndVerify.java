@@ -17,7 +17,7 @@ public class CreateBookingAndVerify {
     public void testCreateBookingAndVerify() {
     	
     	baseURI = "https://restful-booker.herokuapp.com";
-        // Step 1: Create a new booking
+        //Create a new booking
         JSONObject request = new JSONObject();
         request.put("firstname", "Arthur");
         request.put("lastname", "Morgan");
@@ -40,12 +40,12 @@ public class CreateBookingAndVerify {
                 .statusCode(200)
                 .log().all();
 
-        // Step 2: Get the booking ID from the response
+        //Get the booking ID from the response
        int bookingId = createResponse.jsonPath().getInt("bookingid");
      
    
 
-        //Step 3 : Get booking id and verify response
+        //Get booking id and verify response
         Response verifyResponse = given()
                 .when()
                 .get("https://restful-booker.herokuapp.com/booking/" + bookingId);
@@ -56,8 +56,8 @@ public class CreateBookingAndVerify {
                 .body("lastname", equalTo("Morgan"))
                 .body("totalprice", equalTo(444))
                 .body("depositpaid", equalTo(true))
-                .body("bookingdates.checkin", equalTo("2023-10-04"))
-                .body("bookingdates.checkout", equalTo("2023-10-05"))
+                .body("bookingdates.checkin", equalTo("2021-01-12"))
+                .body("bookingdates.checkout", equalTo("2021-01-16"))
                 .body("additionalneeds", equalTo("Dinner"))
                 .log().all();
     }
